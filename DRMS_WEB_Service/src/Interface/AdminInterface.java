@@ -1,9 +1,13 @@
 package Interface;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
 
-public interface AdminInterface extends Remote {
-	
-	public String getNonReturners(String AdminUsername, String strPassword, String InstitutionName, int NumDays) ;	
+@WebService
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+public interface AdminInterface {
+	@WebMethod
+	public String getNonReturners(@WebParam String AdminUsername,@WebParam String strPassword,@WebParam String InstitutionName,@WebParam int NumDays) ;	
 }
