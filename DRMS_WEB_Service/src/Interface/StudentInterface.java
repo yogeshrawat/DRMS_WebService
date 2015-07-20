@@ -1,12 +1,18 @@
 package Interface;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-public interface StudentInterface extends Remote{
-
-	public boolean createAccount(String m_firstName,String m_lastName,String m_emailAddress,String m_phoneNumber,String m_username,String m_password,String m_educationalInstitution)  ;
-	public boolean reserveBook(String m_username,String m_password,String m_bookName,String m_author) ;
-	public int checkUser(String m_username,String m_password,String m_educationalInstitution) ;
+@WebService
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+public interface StudentInterface{
+	@WebMethod
+	public boolean createAccount(@WebParam String m_firstName,@WebParam String m_lastName,@WebParam String m_emailAddress,@WebParam String m_phoneNumber,@WebParam String m_username,@WebParam String m_password,@WebParam String m_educationalInstitution)  ;
+	@WebMethod
+	public boolean reserveBook(@WebParam String m_username,@WebParam String m_password,@WebParam String m_bookName,@WebParam String m_author) ;
+	@WebMethod
+	public int checkUser(@WebParam String m_username,@WebParam String m_password,@WebParam String m_educationalInstitution) ;
 	//public String searchBook(String strBookName) ;
 }
 
