@@ -12,12 +12,16 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import Interface.AdminInterface;
-import Interface.StudentInterface;
+import Interface.LibraryInterface;
 import LibraryObjects.*;
 
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.Style;
 
-public class LibraryServer extends Thread implements StudentInterface, AdminInterface {
+@WebService(endpointInterface="Interface.LibraryInterface")
+@SOAPBinding(style=Style.RPC)
+public class LibraryServer extends Thread implements LibraryInterface{
 
 	private HashMap<Character, ArrayList<Student>> tableStudents = new HashMap<Character, ArrayList<Student>>();
 	//private static ArrayList<List<Student>> listStudents = new ArrayList<List<Student>>(); 
