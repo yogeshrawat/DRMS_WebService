@@ -1,4 +1,4 @@
-package rmi.Client;
+package Client;
 
 import java.util.Scanner;
 import java.util.logging.FileHandler;

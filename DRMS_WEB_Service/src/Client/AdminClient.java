@@ -1,4 +1,4 @@
-package rmi.Client;
+package Client;
 
 import java.io.File;
 import java.io.FileWriter;

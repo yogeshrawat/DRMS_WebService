@@ -1,4 +1,4 @@
-package rmi.Client;
+package Client;
 import java.io.*;
 import java.rmi.*;
 import java.util.Scanner;
