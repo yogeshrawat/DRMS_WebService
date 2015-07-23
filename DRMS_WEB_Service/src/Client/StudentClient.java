@@ -3,8 +3,10 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
+
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
+
 import Utility.ValidateInput;
 import Interface.LibraryInterface;
 
@@ -72,7 +74,8 @@ public class StudentClient extends Client{
 		System.out.println("Please select an option");
 		System.out.println("1. Create An Account.");
 		System.out.println("2. Reserve a Book");
-		System.out.println("3. Exit");
+		System.out.println("3. Reserve a Book InterLibraray");		
+		System.out.println("4. Exit");
 	}
 
 	public static void main(String[] args)
@@ -85,8 +88,7 @@ public class StudentClient extends Client{
 			LibraryInterface objServer = null;
 			Scanner keyboard = new Scanner(System.in);
 			Integer userInput = 0;
-			String portNumber = null;
-			String userName = null, password = null, institution = null;
+			String userName = null, password = null, institution = null,portNumber = null;
 			boolean success = false;
 
 			while(true)
@@ -190,7 +192,30 @@ public class StudentClient extends Client{
 					}					
 					break;
 				case 3: 
-					System.out.println("Have a nice day!");
+					System.out.println("User Name: ");
+					ValidateInput v3 = new ValidateInput();
+					userName = v3.validateUserName(keyboard.nextLine().toString());
+					System.out.println("Password: ");
+					password = v3.validate(keyboard.nextLine().toString());
+					System.out.println("Book Name: ");
+					bookName = objClient.InputStringValidation(keyboard);
+					System.out.println("Author: ");
+					authorName = objClient.InputStringValidation(keyboard);
+					institution= getEducationalInstituteFromUser();
+					portNumber = getPortNumber(institution);
+					objServer = objClient.ServerValidation(portNumber,institution);
+					if(objServer.reserveInterLibrary(userName, password, bookName, authorName))	
+					{
+						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
+						objClient.logger.info("Interlibrary : Book reserved successfully for user "+userName);
+					}
+					else{
+						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
+						objClient.logger.info("Book could not be reserved for : "+userName);
+						}
+					break;
+				case 4: 
+					System.out.println("Thank You \n Have a nice day!");
 					keyboard.close();
 					System.exit(0);
 				default:

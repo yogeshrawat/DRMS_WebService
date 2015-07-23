@@ -2,7 +2,11 @@ package Client;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Scanner;
+
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
@@ -10,11 +14,8 @@ import Interface.LibraryInterface;
 
 public class AdminClient extends Client {
 
-	static LibraryInterface ConcordiaServer;
-	static LibraryInterface OttawaServer;
-	static LibraryInterface WaterlooServer;
-	static final String Concordia = "Concordia", Ottawa = "Ottawa",
-			Waterloo = "Waterloo";
+	static final String Concordia = "Concordia", Ottawa = "Ottawa",Waterloo = "Waterloo";
+	static final  String portConcordia = "50001",portOttawa = "50002",portWaterloo = "50003";
 	protected static String instituteName;
 
 	public void InitializeServer()  {
@@ -26,45 +27,17 @@ public class AdminClient extends Client {
 //				.lookup("rmi://localhost:1099/Waterloo");
 	}
 
-	public LibraryInterface ServerValidation(Scanner keyboard) {
-		Boolean valid = false;
-		LibraryInterface server = null;
-		System.out.println("Enter Institute Name");
-		System.out.println("'Concordia' For Concordia University");
-		System.out.println("'Ottawa' For Ottawa University");
-		System.out.println("'Waterloo' For Waterloo University");
-		while (!valid) {
-			try {
-				instituteName = keyboard.nextLine();
-				server = LocateServer(instituteName);
-				if (server != null) {
-					valid = true;
-				} else {
-					System.out.println("Invalid Institute Name");
-					keyboard.nextLine();
-				}
-			} catch (Exception e) {
-				System.out.println("Invalid Institute Name");
-				valid = false;
-				keyboard.nextLine();
-			}
-		}
-		// keyboard.nextLine();
-		return server;
+	public LibraryInterface getService(String portNumber,String strInstituteName) throws MalformedURLException
+	{
+		
+		URL url = new URL("http://localhost:" +portNumber+"/"+strInstituteName+"/ws?wsdl");
+		QName qname = new QName("http://server/","LibraryServerService");
+		Service service = Service.create(url, qname);
+		LibraryInterface store = service.getPort(LibraryInterface.class);
+		return store;
 	}
 
 	// Get Server Connection
-	public static LibraryInterface LocateServer(String instituteName) {
-		if (instituteName.equals(Concordia)) {
-			return ConcordiaServer;
-		} else if (instituteName.equals(Ottawa)) {
-			return OttawaServer;
-		} else if (instituteName.equals(Waterloo)) {
-			return WaterlooServer;
-		}
-		return null;
-	}
-
 	public static void showMenu() {
 		System.out.println("DRMS Admin Client System \n");
 		System.out.println("Please select an option");
@@ -74,22 +47,23 @@ public class AdminClient extends Client {
 
 	public static void main(String[] args)
 	{
+		Scanner keyboard = new Scanner(System.in);
+		String institution = null,portNumber = null, userName = null, password = null;
 		try{
-			System.setProperty("java.security.policy","file:./security.policy");
 			AdminClient objClient = new AdminClient();
-			//initialize the connections to registry
-			objClient.InitializeServer();
 			LibraryInterface objServer = null;
-			Scanner keyboard = new Scanner(System.in);
+			
 			//to which server you want to connect
-			objServer = objClient.ServerValidation(keyboard);
+			institution= getEducationalInstituteFromUser();
+			portNumber = getPortNumber(institution);
+			objServer = objClient.getService(portNumber,institution);
 			Integer userInput = 0;
 			showMenu();
 			objClient.setLogger("admin", "logs/admin.txt");
 			objClient.logger.info("admin login");
 
 			userInput = Integer.parseInt(objClient.InputStringValidation(keyboard));
-			String userName, password;
+			
 			boolean success = false;
 
 			while(true)
@@ -127,4 +101,44 @@ public class AdminClient extends Client {
 		e.printStackTrace();
 	}
 }
+	private static String getEducationalInstituteFromUser() throws IOException
+	{
+		Integer ans = 0;
+		System.out.println("Institution Name: ");
+		while(true)
+		{
+			System.out.println("Please select a valid option:");
+			System.out.println("1 for Concordia");
+			System.out.println("2 for Ottawa");
+			System.out.println("3 for Waterloo");
+			Client objClient = new StudentClient();
+			Scanner keyboard = new Scanner(System.in);
+			ans = Integer.parseInt(objClient.InputStringValidation(keyboard));
+			if(ans == 1||ans==2||ans==3)
+			{
+				break;
+			}
+			else
+			{
+				System.out.println("Invalid input!");
+			}
+		}
+		switch(ans)
+		{
+		case 1: return Concordia;
+		case 2: return Ottawa;
+		case 3: return Waterloo;					
+		}
+		return null;
+	}
+private static String getPortNumber(String institution) {
+		
+		switch(institution)
+		{
+		case Concordia: return portConcordia;
+		case Ottawa: return portOttawa;
+		case Waterloo: return portWaterloo;
+		default : return null;
+		}
+	}
 }

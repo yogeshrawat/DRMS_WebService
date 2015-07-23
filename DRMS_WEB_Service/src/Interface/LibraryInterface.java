@@ -15,6 +15,11 @@ public interface LibraryInterface{
 	public int checkUser(@WebParam String m_username,@WebParam String m_password,@WebParam String m_educationalInstitution) ;
 	@WebMethod
 	public String getNonReturners(@WebParam String AdminUsername,@WebParam String strPassword,@WebParam String InstitutionName,@WebParam int NumDays) ;	
-
+	@WebMethod
+	public boolean grantBookInterServer(@WebParam String strBookName);
+	@WebMethod
+	public boolean reserveInterLibrary(@WebParam String m_username,@WebParam String m_password,@WebParam String m_bookName,@WebParam String m_authorName);
+	@WebMethod
+	public String GetNonReturnersByServer(@WebParam int NumDays);
 }
 
