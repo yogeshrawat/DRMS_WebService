@@ -1,11 +1,10 @@
 package Client;
 import java.io.*;
-import java.rmi.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Scanner;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
-
-
 import Utility.ValidateInput;
 import Interface.LibraryInterface;
 
@@ -15,22 +14,19 @@ public class StudentClient extends Client{
 	static LibraryInterface OttawaServer;
 	static LibraryInterface WaterlooServer;
 	static final String Concordia ="Concordia", Ottawa="Ottawa", Waterloo="Waterloo";
+	static final  String portConcordia = "50001",portOttawa = "50002",portWaterloo = "50003";
 	protected static String instituteName;
 
-	public void InitializeServer() {
-//		ConcordiaServer = (LibraryInterface)Naming.lookup("rmi://localhost:1099/Concordia");		
-//		OttawaServer = (LibraryInterface)Naming.lookup("rmi://localhost:1099/Ottawa");
-//		WaterlooServer = (LibraryInterface)Naming.lookup("rmi://localhost:1099/Waterloo");	
-	}
-
-	public LibraryInterface ServerValidation(String strInstituteName)
+	public LibraryInterface ServerValidation(String portNumber,String strInstituteName) throws MalformedURLException
 	{
-		Boolean valid = false;
+		URL url = new URL("http://localhost:" +portNumber+"/"+strInstituteName+"/ws?wsdl");
+		QName qname = new QName("http://server/","LibraryServerService");
+		Service service = Service.create(url, qname);
+		LibraryInterface store = service.getPort(LibraryInterface.class);
+		return store;
+	/*	Boolean valid = false;
 		LibraryInterface server = null;
-		//		System.out.println("Enter Institute Name");
-		//		System.out.println("'Concordia' For Concordia University");
-		//		System.out.println("'Ottawa' For Ottawa University");
-		//		System.out.println("'Waterloo' For Waterloo University");
+		
 		while(!valid)
 		{
 			try{
@@ -51,9 +47,9 @@ public class StudentClient extends Client{
 				//keyboard.nextLine();
 			}
 		}
-		//keyboard.nextLine();
+		keyboard.nextLine();
 		return server;
-	}
+*/	}
 
 	//Get Server Connection
 	public static LibraryInterface LocateServer(String instituteName) {
@@ -82,16 +78,14 @@ public class StudentClient extends Client{
 	public static void main(String[] args)
 	{
 		try{
-			System.setProperty("java.security.policy","file:./security.policy");
-			StudentClient objClient = new StudentClient();
+			//System.setProperty("java.security.policy","file:./security.policy");
 			//initialize the connections to registry
-			objClient.InitializeServer();
+			//objClient.InitializeServer();
+			StudentClient objClient = new StudentClient();
 			LibraryInterface objServer = null;
 			Scanner keyboard = new Scanner(System.in);
-			//to which server you want to connect
-			//objServer = objClient.ServerValidation(keyboard);
 			Integer userInput = 0;
-
+			String portNumber = null;
 			String userName = null, password = null, institution = null;
 			boolean success = false;
 
@@ -118,8 +112,9 @@ public class StudentClient extends Client{
 					System.out.println("Password: ");
 					password = v.validate(keyboard.nextLine().toString());
 					institution= getEducationalInstituteFromUser();
-					objServer = objClient.ServerValidation(institution);
-					success = objServer.createAccount(firstName, lastName, emailAddress, phoneNumber, userName, password, objClient.instituteName);
+					portNumber = getPortNumber(institution);
+					objServer = objClient.ServerValidation(portNumber,institution);
+					success = objServer.createAccount(firstName, lastName, emailAddress, phoneNumber, userName, password, institution);
 					if(success){
 						System.out.println("Success");
 						File fi = new File(".\\logs\\students\\"+userName+".txt");
@@ -134,7 +129,6 @@ public class StudentClient extends Client{
 						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
 						objClient.logger.info("Account already exist with username as : "+userName);
 						fw.close();
-
 					}					
 					break;
 				case 2: 
@@ -152,11 +146,9 @@ public class StudentClient extends Client{
 						bookName = objClient.InputStringValidation(keyboard);
 						System.out.println("Author: ");
 						authorName = objClient.InputStringValidation(keyboard);
-
-
 						institution= getEducationalInstituteFromUser();
-						objClient.InitializeServer();
-						objServer = objClient.ServerValidation(institution);
+						portNumber = getPortNumber(institution);
+						objServer = objClient.ServerValidation(portNumber,institution);
 						int loginResult = objServer.checkUser(userName, password, institution);
 						switch(loginResult)
 						{
@@ -211,6 +203,17 @@ public class StudentClient extends Client{
 		}
 	}
 
+	private static String getPortNumber(String institution) {
+		
+		switch(institution)
+		{
+		case Concordia: return portConcordia;
+		case Ottawa: return portOttawa;
+		case Waterloo: return portWaterloo;
+		default : return null;
+		}
+	}
+
 	private static String getEducationalInstituteFromUser() throws IOException
 	{
 		Integer ans = 0;
@@ -221,11 +224,9 @@ public class StudentClient extends Client{
 			System.out.println("1 for Concordia");
 			System.out.println("2 for Ottawa");
 			System.out.println("3 for Waterloo");
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			Client objClient = new StudentClient();
 			Scanner keyboard = new Scanner(System.in);
 			ans = Integer.parseInt(objClient.InputStringValidation(keyboard));
-			//ans = Integer.parseInt(objClient.InputStringValidation(keyboard));
 			if(ans == 1||ans==2||ans==3)
 			{
 				break;
