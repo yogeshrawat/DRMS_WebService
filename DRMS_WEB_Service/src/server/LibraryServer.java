@@ -66,16 +66,16 @@ public class LibraryServer extends Thread implements LibraryInterface{
 
 
 
-//	public int getUDPPort()
-//	{
-//		return this.udpPort;
-//	}
-//	public LibraryServer(String strInstitution, int iPortNum) {
-//		// TODO Auto-generated constructor stub
-//		instituteName = strInstitution;
-//		//udpPort = iPortNum;
-//		this.setLogger("logs/library/"+instituteName+".txt");
-//	}
+	//	public int getUDPPort()
+	//	{
+	//		return this.udpPort;
+	//	}
+	//	public LibraryServer(String strInstitution, int iPortNum) {
+	//		// TODO Auto-generated constructor stub
+	//		instituteName = strInstitution;
+	//		//udpPort = iPortNum;
+	//		this.setLogger("logs/library/"+instituteName+".txt");
+	//	}
 
 	//	public static void main(String[] args)  {
 	//
@@ -183,35 +183,35 @@ public class LibraryServer extends Thread implements LibraryInterface{
 
 	}
 
-//	public void run()
-//	{
-//		DatagramSocket socket = null;
-//
-//		try
-//		{
-//			socket = new DatagramSocket(this.udpPort);
-//			byte[] msg = new byte[10000];
-//			//Logger call
-//
-//			while(true)
-//			{
-//				DatagramPacket request = new DatagramPacket(msg, msg.length);
-//				socket.receive(request);
-//				String data = new String(request.getData());
-//				String response = GetNonReturnersByServer(Integer.parseInt(data.trim()));
-//				DatagramPacket reply = new DatagramPacket(response.getBytes(),response.length(),request.getAddress(),request.getPort());
-//				socket.send(reply);
-//			}
-//		}
-//		catch(Exception ex)
-//		{
-//			ex.printStackTrace();
-//		}
-//		finally
-//		{
-//			socket.close();
-//		}
-//	}
+	//	public void run()
+	//	{
+	//		DatagramSocket socket = null;
+	//
+	//		try
+	//		{
+	//			socket = new DatagramSocket(this.udpPort);
+	//			byte[] msg = new byte[10000];
+	//			//Logger call
+	//
+	//			while(true)
+	//			{
+	//				DatagramPacket request = new DatagramPacket(msg, msg.length);
+	//				socket.receive(request);
+	//				String data = new String(request.getData());
+	//				String response = GetNonReturnersByServer(Integer.parseInt(data.trim()));
+	//				DatagramPacket reply = new DatagramPacket(response.getBytes(),response.length(),request.getAddress(),request.getPort());
+	//				socket.send(reply);
+	//			}
+	//		}
+	//		catch(Exception ex)
+	//		{
+	//			ex.printStackTrace();
+	//		}
+	//		finally
+	//		{
+	//			socket.close();
+	//		}
+	//	}
 
 	@Override
 	public boolean createAccount(String strFirstName, String strLastName, String strEmailAddress, String strPhoneNumber, String strUsername,
@@ -265,6 +265,12 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		int iLoginResult = 0;
 		Student objStudent = null;
 		objStudent = getStudent(strUsername);
+		HashMap<Book,Integer> reservedBooks = objStudent.getReservedBooks();
+		if(reservedBooks.get(strBookName) != null)	{
+			logger.info(strBookName+": is already reserved for the user "+strUsername);
+			System.out.println(strBookName+": is already reserved for the user "+strUsername);
+			return success;
+		}
 		if(objStudent!=null)
 		{
 			iLoginResult = checkUser(strUsername, strPassword, objStudent.getInst());
@@ -350,7 +356,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 					{
 						String portNumber = getPortNumber(libraryServer);
 						LibraryInterface remoteServer = getService(portNumber, libraryServer);
-						
+
 						if(remoteServer.grantBookInterServer(m_bookName))
 						{
 							bookReserved =true;
@@ -421,10 +427,10 @@ public class LibraryServer extends Thread implements LibraryInterface{
 	public boolean grantBookInterServer(String strBookName)
 	{
 		boolean isAvailable=false;
-			System.out.println(strBookName);
-			//strBookName=strBookName.substring(1);
+		System.out.println(strBookName);
+		//strBookName=strBookName.substring(1);
 		System.out.println("I am "+this.instituteName+". Grant book.");
-		 HashMap<String, Book> BookTable = this.getBooksTable();
+		HashMap<String, Book> BookTable = this.getBooksTable();
 		Book objBook = BookTable.get(strBookName);
 		if(objBook!= null)
 		{
