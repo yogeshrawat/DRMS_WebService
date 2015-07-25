@@ -31,7 +31,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 	//private static ArrayList<List<Student>> listStudents = new ArrayList<List<Student>>(); 
 	private HashMap<String, Book> tableBooks   = new HashMap<String, Book>();
 	private String instituteName;
-	private int udpPort;
+	//private int udpPort;
 	static final String Concordia ="Concordia", Ottawa="Ottawa", Waterloo="Waterloo";
 	static final  String portConcordia = "50001",portOttawa = "50002",portWaterloo = "50003";
 	private static String[] ServerNames = new String[] {Concordia,Ottawa,Waterloo};
@@ -66,16 +66,16 @@ public class LibraryServer extends Thread implements LibraryInterface{
 
 
 
-	public int getUDPPort()
-	{
-		return this.udpPort;
-	}
-	public LibraryServer(String strInstitution, int iPortNum) {
-		// TODO Auto-generated constructor stub
-		instituteName = strInstitution;
-		udpPort = iPortNum;
-		this.setLogger("logs/library/"+instituteName+".txt");
-	}
+//	public int getUDPPort()
+//	{
+//		return this.udpPort;
+//	}
+//	public LibraryServer(String strInstitution, int iPortNum) {
+//		// TODO Auto-generated constructor stub
+//		instituteName = strInstitution;
+//		//udpPort = iPortNum;
+//		this.setLogger("logs/library/"+instituteName+".txt");
+//	}
 
 	//	public static void main(String[] args)  {
 	//
@@ -183,35 +183,35 @@ public class LibraryServer extends Thread implements LibraryInterface{
 
 	}
 
-	public void run()
-	{
-		DatagramSocket socket = null;
-
-		try
-		{
-			socket = new DatagramSocket(this.udpPort);
-			byte[] msg = new byte[10000];
-			//Logger call
-
-			while(true)
-			{
-				DatagramPacket request = new DatagramPacket(msg, msg.length);
-				socket.receive(request);
-				String data = new String(request.getData());
-				String response = GetNonReturnersByServer(Integer.parseInt(data.trim()));
-				DatagramPacket reply = new DatagramPacket(response.getBytes(),response.length(),request.getAddress(),request.getPort());
-				socket.send(reply);
-			}
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		finally
-		{
-			socket.close();
-		}
-	}
+//	public void run()
+//	{
+//		DatagramSocket socket = null;
+//
+//		try
+//		{
+//			socket = new DatagramSocket(this.udpPort);
+//			byte[] msg = new byte[10000];
+//			//Logger call
+//
+//			while(true)
+//			{
+//				DatagramPacket request = new DatagramPacket(msg, msg.length);
+//				socket.receive(request);
+//				String data = new String(request.getData());
+//				String response = GetNonReturnersByServer(Integer.parseInt(data.trim()));
+//				DatagramPacket reply = new DatagramPacket(response.getBytes(),response.length(),request.getAddress(),request.getPort());
+//				socket.send(reply);
+//			}
+//		}
+//		catch(Exception ex)
+//		{
+//			ex.printStackTrace();
+//		}
+//		finally
+//		{
+//			socket.close();
+//		}
+//	}
 
 	@Override
 	public boolean createAccount(String strFirstName, String strLastName, String strEmailAddress, String strPhoneNumber, String strUsername,
