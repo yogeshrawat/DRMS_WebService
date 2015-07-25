@@ -13,13 +13,13 @@ public class PublishServer extends Thread{
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		//@WebServiceRef(wsdlLocation="http://localhost:8080/cal?wsdl")
-		LibraryServer serverConcordia=new LibraryServer("Concordia",50001);
+		LibraryServer serverConcordia=new LibraryServer("Concordia");
         new Thread(serverConcordia).start();
         
-        LibraryServer serverOttawa=new LibraryServer("Ottawa",50002);
+        LibraryServer serverOttawa=new LibraryServer("Ottawa");
         new Thread(serverOttawa).start();
         
-        LibraryServer serverWaterloo=new LibraryServer("Waterloo",50003);
+        LibraryServer serverWaterloo=new LibraryServer("Waterloo");
         new Thread(serverWaterloo).start();
         
         //Add test data
