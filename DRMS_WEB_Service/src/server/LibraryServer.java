@@ -138,35 +138,6 @@ public class LibraryServer extends Thread implements LibraryInterface{
 
 	}
 
-	//	public void run()
-	//	{
-	//		DatagramSocket socket = null;
-	//
-	//		try
-	//		{
-	//			socket = new DatagramSocket(this.udpPort);
-	//			byte[] msg = new byte[10000];
-	//			//Logger call
-	//
-	//			while(true)
-	//			{
-	//				DatagramPacket request = new DatagramPacket(msg, msg.length);
-	//				socket.receive(request);
-	//				String data = new String(request.getData());
-	//				String response = GetNonReturnersByServer(Integer.parseInt(data.trim()));
-	//				DatagramPacket reply = new DatagramPacket(response.getBytes(),response.length(),request.getAddress(),request.getPort());
-	//				socket.send(reply);
-	//			}
-	//		}
-	//		catch(Exception ex)
-	//		{
-	//			ex.printStackTrace();
-	//		}
-	//		finally
-	//		{
-	//			socket.close();
-	//		}
-	//	}
 
 	@Override
 	public boolean createAccount(String strFirstName, String strLastName, String strEmailAddress, String strPhoneNumber, String strUsername,
