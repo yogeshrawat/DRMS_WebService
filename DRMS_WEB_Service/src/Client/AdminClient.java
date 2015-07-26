@@ -1,5 +1,6 @@
 package Client;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -82,10 +83,20 @@ public class AdminClient extends Client {
 					objClient.logger.info("Non Returner retrieved on :"+ System.currentTimeMillis());
 					String result = "";
 					result = objServer.getNonReturners(userName, password, objServer.toString(), numOfDays);
-					File nonReturners=new File(".\\src\\NonReturners.txt");
-					FileWriter fw=new FileWriter(nonReturners);
-					fw.write(result);
-					System.out.println("File Written");
+					File directory=new File("logs\\admin");
+					if(!directory.exists()){
+						directory.mkdir();
+					}
+					File nonReturners=new File(".\\logs\\admin\\NonReturnersFile.txt");
+					BufferedWriter bw=new BufferedWriter(new FileWriter(nonReturners));
+					bw.write(result.trim());
+					bw.flush();
+					bw.close();
+					System.out.println("NonReturners File Written");
+//					File nonReturners=new File(".\\src\\NonReturners.txt");
+//					FileWriter fw=new FileWriter(nonReturners);
+//					fw.write(result);
+//					System.out.println("File Written");
 					showMenu();
 					break;
 				case 2:

@@ -413,10 +413,11 @@ public class LibraryServer extends Thread implements LibraryInterface{
 	@Override
 	public String getNonReturners(String AdminUsername, String AdminPassword,String InstitutionName, int NumDays) 
 	{
-		String response = null;
+		String response ="";
 		if(AdminUsername.equalsIgnoreCase("admin")&&AdminPassword.equals("admin"))
 		{
 			response += GetNonReturnersByServer(NumDays);
+			response +="\n";
 			for(String Server : ServerNames)
 			{
 				synchronized(Server)
@@ -428,6 +429,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 							String portNumber = getPortNumber(Server);
 							LibraryInterface remoteServer = getService(portNumber, Server);
 							response += remoteServer.GetNonReturnersByServer(NumDays);
+							response +="\n";
 						}
 						catch(Exception ex)
 						{
