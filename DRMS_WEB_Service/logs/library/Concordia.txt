@@ -1,0 +1,8 @@
+Jul 26, 2015 3:16:29 PM server.LibraryServer createAccount
+INFO: New User added to the library with username as : yogesh
+Jul 26, 2015 3:16:29 PM server.LibraryServer reserveBook
+INFO: yogesh: Reserved the book Book1
+. Remaining copies ofBook1is/are9
+Jul 26, 2015 3:17:11 PM server.LibraryServer reserveBook
+INFO: yogesh: Reserved the book Book2
+. Remaining copies ofBook2is/are9
