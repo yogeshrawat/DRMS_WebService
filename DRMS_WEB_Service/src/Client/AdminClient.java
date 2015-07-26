@@ -7,10 +7,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
-
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
-
 import Interface.LibraryInterface;
 
 public class AdminClient extends Client {
@@ -18,15 +16,6 @@ public class AdminClient extends Client {
 	static final String Concordia = "Concordia", Ottawa = "Ottawa",Waterloo = "Waterloo";
 	static final  String portConcordia = "50001",portOttawa = "50002",portWaterloo = "50003";
 	protected static String instituteName;
-
-	public void InitializeServer()  {
-//		ConcordiaServer = (LibraryInterface) Naming
-//				.lookup("rmi://localhost:1099/Concordia");
-//		OttawaServer = (LibraryInterface) Naming
-//				.lookup("rmi://localhost:1099/Ottawa");
-//		WaterlooServer = (LibraryInterface) Naming
-//				.lookup("rmi://localhost:1099/Waterloo");
-	}
 
 	public LibraryInterface getService(String portNumber,String strInstituteName) throws MalformedURLException
 	{
@@ -60,12 +49,10 @@ public class AdminClient extends Client {
 			objServer = objClient.getService(portNumber,institution);
 			Integer userInput = 0;
 			showMenu();
-			objClient.setLogger("admin", "logs/admin.txt");
+			objClient.setLogger("admin", "logs/admin/admin.txt");
 			objClient.logger.info("admin login");
 
 			userInput = Integer.parseInt(objClient.InputStringValidation(keyboard));
-			
-			boolean success = false;
 
 			while(true)
 			{
@@ -78,7 +65,6 @@ public class AdminClient extends Client {
 					password = objClient.InputStringValidation(keyboard);
 					System.out.println("No Of Days: ");
 					int numOfDays = objClient.InputIntValidation(keyboard);
-					//TODO what to do with institute name
 					
 					objClient.logger.info("Non Returner retrieved on :"+ System.currentTimeMillis());
 					String result = "";
@@ -93,10 +79,7 @@ public class AdminClient extends Client {
 					bw.flush();
 					bw.close();
 					System.out.println("NonReturners File Written");
-//					File nonReturners=new File(".\\src\\NonReturners.txt");
-//					FileWriter fw=new FileWriter(nonReturners);
-//					fw.write(result);
-//					System.out.println("File Written");
+
 					showMenu();
 					break;
 				case 2:

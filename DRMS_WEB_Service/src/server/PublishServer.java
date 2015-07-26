@@ -11,7 +11,6 @@ public class PublishServer extends Thread{
 	 */
 	
 	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
 		//@WebServiceRef(wsdlLocation="http://localhost:8080/cal?wsdl")
 		LibraryServer serverConcordia=new LibraryServer("Concordia");
         new Thread(serverConcordia).start();

@@ -25,10 +25,8 @@ import javax.xml.ws.Service;
 public class LibraryServer extends Thread implements LibraryInterface{
 
 	private HashMap<Character, ArrayList<Student>> tableStudents = new HashMap<Character, ArrayList<Student>>();
-	//private static ArrayList<List<Student>> listStudents = new ArrayList<List<Student>>(); 
 	private HashMap<String, Book> tableBooks   = new HashMap<String, Book>();
 	private String instituteName;
-	//private int udpPort;
 	static final String Concordia ="Concordia", Ottawa="Ottawa", Waterloo="Waterloo";
 	static final  String portConcordia = "50001",portOttawa = "50002",portWaterloo = "50003";
 	private static String[] ServerNames = new String[] {Concordia,Ottawa,Waterloo};
@@ -41,9 +39,8 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		this.setLogger(".\\logs\\library\\"+instituteName+".txt");
 	}
 
-	public LibraryServer(){
-
-	}
+	public LibraryServer(){	}
+	
 	public  HashMap<String, Book> getBooksTable()
 	{
 		return tableBooks;
@@ -61,7 +58,6 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		}
 	}
 
-
 	public void addData()
 	{	
 		if(this.instituteName == "Concordia")
@@ -73,7 +69,6 @@ public class LibraryServer extends Thread implements LibraryInterface{
 			}
 			Book book = new Book("Book3", "Author3", 10);
 			this.tableBooks.put("Book3", book);
-
 
 		}
 		else{
@@ -138,7 +133,6 @@ public class LibraryServer extends Thread implements LibraryInterface{
 
 	}
 
-
 	@Override
 	public boolean createAccount(String strFirstName, String strLastName, String strEmailAddress, String strPhoneNumber, String strUsername,
 			String strPassword, String strEducationalInstitution)
@@ -184,6 +178,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		}
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public boolean reserveBook(String strUsername, String strPassword, String strBookName, String strAuthor)   
 	{
@@ -246,7 +241,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 	//Checks availability of requested book
 	private boolean isBookAvailable(String strBookName)
 	{
-		System.out.println("I am "+this.instituteName+". isAvailable.");
+		System.out.println("Checking availability of "+strBookName+" on "+this.instituteName+" Server.");
 		boolean isAvailable=false;
 		Book objBook = tableBooks.get(strBookName);
 		if(objBook!= null)
@@ -268,12 +263,12 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		boolean bookReserved = false;
 		if(isBookAvailable(m_bookName))
 		{
+			
 			bookReserved = reserveBook(m_username, m_password, m_bookName, m_authorName);
 		}
 		else
 		{
-			//boolean result = false;
-			// TODO Auto-generated method stub
+			System.out.println(m_bookName+" was not found. On "+this.instituteName+" Server.");
 			for(String libraryServer : ServerNames)
 			{
 				if(this.instituteName!=libraryServer)
@@ -292,7 +287,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 							try
 							{
 								(objStudent.getReservedBooks()).put(objBook,Default_Reserve_Period);//Add Book to Student's reserved list for 14 days
-								System.out.println(this.instituteName +" Library : "+m_username+": Reserved the book "+m_bookName+" from " + libraryServer+" server.");
+								System.out.println(this.instituteName +" Library : "+m_username+": reserved book "+m_bookName+" from " + libraryServer+" server.");
 								bookReserved =true;
 								//Logger.info(m_username+": Reserved the book "+m_bookName+"\n. Remaining copies of"+ m_bookName +"is/are "+objBook.getNumOfCopy());
 								//Logger.info(m_username+": Reserved the book "+m_bookName+"from "+libraryServer.instituteName+" server.");
@@ -308,7 +303,6 @@ public class LibraryServer extends Thread implements LibraryInterface{
 					} 
 					catch (Exception e) 
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -322,9 +316,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 	public boolean grantBookInterServer(String strBookName, boolean isRevertCall)
 	{
 		boolean isAvailable=false;
-		System.out.println(strBookName);
-		//strBookName=strBookName.substring(1);
-		System.out.println("I am "+this.instituteName+". Grant book.");
+		System.out.println("This is "+this.instituteName+" Server.");
 		HashMap<String, Book> BookTable = this.getBooksTable();
 		Book objBook = BookTable.get(strBookName);
 		synchronized(objBook)
@@ -356,7 +348,6 @@ public class LibraryServer extends Thread implements LibraryInterface{
 
 	public boolean isExist(String strUsername, String strEducationalInstitution) 
 	{
-		// TODO Auto-generated method stub
 		boolean exist = false;
 		ArrayList<Student> listStudent = new ArrayList<Student>();
 		listStudent = tableStudents.get(strUsername.charAt(0));
@@ -376,11 +367,9 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		return exist;
 	}
 
-
 	@Override
 	public int checkUser(String strUsername, String strPassword,String strEducationalInstitution)  
 	{
-		// TODO Auto-generated method stub
 		int login = 0;
 		ArrayList<Student> listStudent = new ArrayList<Student>();
 		listStudent = tableStudents.get(strUsername.charAt(0));
@@ -406,9 +395,6 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		}
 		return login;
 	}
-
-
-
 
 	@Override
 	public String getNonReturners(String AdminUsername, String AdminPassword,String InstitutionName, int NumDays) 
@@ -449,7 +435,6 @@ public class LibraryServer extends Thread implements LibraryInterface{
 	{
 		StringBuilder sbStudentList = new StringBuilder();
 		sbStudentList.append(instituteName+": \n");
-		// TODO Auto-generated method stub
 		Iterator<?> it = tableStudents.entrySet().iterator();
 		while(it.hasNext())
 		{

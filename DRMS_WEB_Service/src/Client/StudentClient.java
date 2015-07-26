@@ -3,10 +3,8 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
-
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
-
 import Utility.ValidateInput;
 import Interface.LibraryInterface;
 
@@ -24,24 +22,10 @@ public class StudentClient extends Client{
 		URL url = new URL("http://localhost:" +portNumber+"/"+strInstituteName+"/ws?wsdl");
 		QName qname = new QName("http://server/","LibraryServerService");
 		Service service = Service.create(url, qname);
-		LibraryInterface store = service.getPort(LibraryInterface.class);
-		return store;
+		LibraryInterface library = service.getPort(LibraryInterface.class);
+		return library;
 		}
-
-	//Get Server Connection
-	public static LibraryInterface LocateServer(String instituteName) {
-		if(instituteName.equals(Concordia)) {
-			return ConcordiaServer;
-		}
-		else if(instituteName.equals(Ottawa)) {
-			return OttawaServer;
-		}
-		else if(instituteName.equals(Waterloo)) {
-			return WaterlooServer;
-		}
-		return null;
-	}
-
+	
 	//Menu to display actions that are need to perform by student
 	public static void showMenu()
 	{
@@ -56,9 +40,6 @@ public class StudentClient extends Client{
 	public static void main(String[] args)
 	{
 		try{
-			//System.setProperty("java.security.policy","file:./security.policy");
-			//initialize the connections to registry
-			//objClient.InitializeServer();
 			StudentClient objClient = new StudentClient();
 			LibraryInterface objServer = null;
 			Scanner keyboard = new Scanner(System.in);
