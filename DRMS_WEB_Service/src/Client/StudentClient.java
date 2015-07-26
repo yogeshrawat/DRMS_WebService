@@ -26,32 +26,7 @@ public class StudentClient extends Client{
 		Service service = Service.create(url, qname);
 		LibraryInterface store = service.getPort(LibraryInterface.class);
 		return store;
-	/*	Boolean valid = false;
-		LibraryInterface server = null;
-		
-		while(!valid)
-		{
-			try{
-				instituteName = strInstituteName;
-				server = LocateServer(instituteName);
-				if(server != null) {
-					valid=true;
-				}
-				else {
-					System.out.println("Invalid Institute Name");
-					//keyboard.nextLine();
-				}
-			}
-			catch(Exception e)
-			{
-				System.out.println("Invalid Institute Name");
-				valid=false;
-				//keyboard.nextLine();
-			}
 		}
-		keyboard.nextLine();
-		return server;
-*/	}
 
 	//Get Server Connection
 	public static LibraryInterface LocateServer(String instituteName) {

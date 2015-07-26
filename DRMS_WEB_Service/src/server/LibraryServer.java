@@ -1,7 +1,4 @@
 package server;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -65,48 +62,6 @@ public class LibraryServer extends Thread implements LibraryInterface{
 	}
 
 
-
-	//	public int getUDPPort()
-	//	{
-	//		return this.udpPort;
-	//	}
-	//	public LibraryServer(String strInstitution, int iPortNum) {
-	//		// TODO Auto-generated constructor stub
-	//		instituteName = strInstitution;
-	//		//udpPort = iPortNum;
-	//		this.setLogger("logs/library/"+instituteName+".txt");
-	//	}
-
-	//	public static void main(String[] args)  {
-	//
-	//		// TODO Auto-generated method stub
-	//
-	//		LibraryServer Server1 = new LibraryServer("Concordia",50001);
-	//		LibraryServer Server2 = new LibraryServer("Ottawa",50002);
-	//		LibraryServer Server3 = new LibraryServer("Waterloo",50003);
-	//
-	//		
-	//
-	//		Server1.start();
-	//		System.out.println("Concordia server up and running!");
-	//		Server2.start();
-	//		System.out.println("Ottawa server up and running!");
-	//		Server3.start();
-	//		System.out.println("Waterloo server up and running!");
-	//
-	//		addData(Server1);
-	//		addData(Server2);
-	//		addData(Server3);
-	//
-	//		LibraryServers = new ArrayList<LibraryServer>();
-	//		LibraryServers.add(Server1);
-	//		LibraryServers.add(Server2);
-	//		LibraryServers.add(Server3);
-	//
-	//
-	//	}
-	//
-	private static int i=1;
 	public void addData()
 	{	
 		if(this.instituteName == "Concordia")
@@ -456,7 +411,6 @@ public class LibraryServer extends Thread implements LibraryInterface{
 	{
 		// TODO Auto-generated method stub
 		int login = 0;
-		Student objStudent = null;
 		ArrayList<Student> listStudent = new ArrayList<Student>();
 		listStudent = tableStudents.get(strUsername.charAt(0));
 		if(listStudent!=null)
@@ -516,6 +470,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 			System.out.println("Invalid Login");
 		return response;
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	public String GetNonReturnersByServer(int NumDays)
 	{
@@ -525,6 +480,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		Iterator<?> it = tableStudents.entrySet().iterator();
 		while(it.hasNext())
 		{
+			@SuppressWarnings("rawtypes")
 			Map.Entry pair = (Map.Entry)it.next();
 			ArrayList<Student> listStudent = (ArrayList<Student>) pair.getValue();
 			if(!listStudent.isEmpty())
@@ -536,6 +492,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 						Iterator<?> innerIterator = objStudent.getReservedBooks().entrySet().iterator();
 						while(innerIterator.hasNext())
 						{
+							@SuppressWarnings("rawtypes")
 							Map.Entry innerPair = (Map.Entry)innerIterator.next();
 
 							if((int)innerPair.getValue()<=(14-NumDays))
