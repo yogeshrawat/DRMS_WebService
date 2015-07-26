@@ -35,7 +35,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 	static final String Concordia ="Concordia", Ottawa="Ottawa", Waterloo="Waterloo";
 	static final  String portConcordia = "50001",portOttawa = "50002",portWaterloo = "50003";
 	private static String[] ServerNames = new String[] {Concordia,Ottawa,Waterloo};
-
+	private static int Default_Reserve_Period =14;
 	private Logger logger;
 
 	public LibraryServer(String instituteName)
@@ -285,7 +285,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 						if(objBook.getNumOfCopy()>0)
 						{
 							objBook.setNumOfCopy(objBook.getNumOfCopy()-1);//Decrement available copies
-							(objStudent.getReservedBooks()).put(objBook,14);//Add Book to Student's reserved list for 14 days
+							(objStudent.getReservedBooks()).put(objBook,Default_Reserve_Period);//Add Book to Student's reserved list for 14 days
 							success = true;
 							logger.info(strUsername+": Reserved the book "+strBookName+"\n. Remaining copies of"+ strBookName+"is/are"+objBook.getNumOfCopy());
 							System.out.println(this.instituteName +" Library : "+strUsername+": Reserved the book "+strBookName+"\n. Remaining copies of "+ strBookName+" is/are "+objBook.getNumOfCopy());
@@ -357,59 +357,28 @@ public class LibraryServer extends Thread implements LibraryInterface{
 						String portNumber = getPortNumber(libraryServer);
 						LibraryInterface remoteServer = getService(portNumber, libraryServer);
 
-						if(remoteServer.grantBookInterServer(m_bookName))
+						if(remoteServer.grantBookInterServer(m_bookName,false))
 						{
-							bookReserved =true;
-							System.out.println(this.instituteName +" Library : "+m_username+": Reserved the book "+m_bookName+" from " + libraryServer+" server.");
-							//Logger.info(m_username+": Reserved the book "+m_bookName+"\n. Remaining copies of"+ m_bookName +"is/are "+objBook.getNumOfCopy());
-							//Logger.info(m_username+": Reserved the book "+m_bookName+"from "+libraryServer.instituteName+" server.");
-							//System.out.println(this.instituteName +" Library : "+m_username+": Reserved the book "+m_bookName+"\n. Remaining copies of "+ m_bookName+" is/are "+objBook.getNumOfCopy());
+							//Add granted book to Students Reserved book list
+							Student objStudent = null;
+							objStudent = getStudent(m_username);
+							Book objBook = new Book(m_bookName,m_authorName,0);
+							try
+							{
+								(objStudent.getReservedBooks()).put(objBook,Default_Reserve_Period);//Add Book to Student's reserved list for 14 days
+								System.out.println(this.instituteName +" Library : "+m_username+": Reserved the book "+m_bookName+" from " + libraryServer+" server.");
+								bookReserved =true;
+								//Logger.info(m_username+": Reserved the book "+m_bookName+"\n. Remaining copies of"+ m_bookName +"is/are "+objBook.getNumOfCopy());
+								//Logger.info(m_username+": Reserved the book "+m_bookName+"from "+libraryServer.instituteName+" server.");
+								//System.out.println(this.instituteName +" Library : "+m_username+": Reserved the book "+m_bookName+"\n. Remaining copies of "+ m_bookName+" is/are "+objBook.getNumOfCopy());
+							}
+							catch(Exception e)
+							{
+								//Revert back the process as book reservation failed
+								remoteServer.grantBookInterServer(m_bookName,true);
+							}
 							break;
 						}
-						//						//LibraryServer libraryServer = (LibraryServer) getServerObject(args, LibraryServers[i]);
-						//						DatagramSocket socket = null;
-						//						try
-						//						{
-						//							socket = new DatagramSocket();
-						//							String strInputParameters="ReserveBook:"+m_bookName;
-						//							byte[] msgOut = (strInputParameters).getBytes();
-						//							InetAddress host = InetAddress.getByName("localhost");
-						//							int ServerPort = libraryServer.getUDPPort();
-						//							
-						//							DatagramPacket request = new DatagramPacket(msgOut, (strInputParameters).length(),host,ServerPort);
-						//							socket.send(request);
-						//
-						//							byte[] msgIn = new byte[10000];
-						//							DatagramPacket reply = new DatagramPacket(msgIn, msgIn.length);
-						//							socket.receive(reply);
-						//							response=new String(reply.getData());
-						//
-						//							if(response.equals("true"))//Book granted by other Server
-						//							{
-						//								bookAvailabe=true;
-						//								//Add granted book to Students Reserved book list
-						//								Student objStudent = null;
-						//								objStudent = getStudent(m_username);
-						//								Book objBook = new Book(m_bookName,m_authorName,0);
-						//								(objStudent.getReservedBooks()).put(objBook,14);//Add Book to Student's reserved list for 14 days
-						//								//success = true;
-						//								logger.info(m_username+": Reserved the book "+m_bookName+"\n. Remaining copies of"+ m_bookName+" is/are "+objBook.getNumOfCopy());
-						//								System.out.println(this.instituteName +" Library : "+m_username+": Reserved the book "+m_bookName+"\n. Remaining copies of "+ m_bookName+" is/are "+objBook.getNumOfCopy());	
-						//								break;
-						//							}
-						//							
-
-						//						}
-						//						catch(Exception ex)
-						//						{
-						//							ex.printStackTrace();
-						//						}
-						//						finally
-						//						{
-						//							socket.close();
-						//						}
-
-						//					response += libraryServer.GetNonReturnersByServer(NumDays);
 					} 
 					catch (Exception e) 
 					{
@@ -424,7 +393,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		return bookReserved;
 	}
 
-	public boolean grantBookInterServer(String strBookName)
+	public boolean grantBookInterServer(String strBookName, boolean isRevertCall)
 	{
 		boolean isAvailable=false;
 		System.out.println(strBookName);
@@ -432,18 +401,29 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		System.out.println("I am "+this.instituteName+". Grant book.");
 		HashMap<String, Book> BookTable = this.getBooksTable();
 		Book objBook = BookTable.get(strBookName);
-		if(objBook!= null)
+		synchronized(objBook)
 		{
-			//reserve the book
-			if(objBook.getNumOfCopy()>0)
+			if(objBook!= null)
 			{
-				objBook.setNumOfCopy(objBook.getNumOfCopy()-1);//Decrement available copies
-				isAvailable = true;
+				if(!isRevertCall)//Call for reserve book
+				{
+					//reserve the book
+					if(objBook.getNumOfCopy()>0)
+					{
+						objBook.setNumOfCopy(objBook.getNumOfCopy()-1);//Decrement available copies
+						isAvailable = true;
+					}
+				}
+				else
+				{
+					objBook.setNumOfCopy(objBook.getNumOfCopy()+1);//Increment available copies
+					isAvailable = true;
+				}
 			}
-		}
-		else
-		{
-			isAvailable = false;
+			else
+			{
+				isAvailable = false;
+			}
 		}
 		return isAvailable;
 	}
