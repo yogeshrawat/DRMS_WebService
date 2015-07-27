@@ -2,44 +2,44 @@
  * 
  */
 package LibraryObjects;
+
 import java.util.HashMap;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class Student.
  */
-public class Student 
-{
-	
+public class Student {
+
 	/** The first name. */
-	private String firstName; 
-	
+	private String firstName;
+
 	/** The last name. */
 	private String lastName;
-	
+
 	/** The email address. */
 	private String emailAddress;
-	
+
 	/** The phone number. */
-	private String phoneNumber; 
-	
+	private String phoneNumber;
+
 	/** The user name. */
-	private String userName; 
-	
+	private String userName;
+
 	/** The password. */
-	private String password; 
-	
+	private String password;
+
 	/** The institute. */
 	private String institute;
-	
+
 	/** The list reserved books. */
-	private HashMap<Book,Integer> listReservedBooks;
-	
+	private HashMap<Book, Integer> listReservedBooks;
+
 	/** The i fines accumulated. */
 	private int iFinesAccumulated;
-	
-	//ArrayList<Borrow> borrowList = new ArrayList<Borrow>();
-			
+
+	// ArrayList<Borrow> borrowList = new ArrayList<Borrow>();
+
 	/**
 	 * Gets the first name.
 	 *
@@ -52,7 +52,8 @@ public class Student
 	/**
 	 * Sets the first name.
 	 *
-	 * @param firstName the new first name
+	 * @param firstName
+	 *            the new first name
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
@@ -70,7 +71,8 @@ public class Student
 	/**
 	 * Sets the last name.
 	 *
-	 * @param lastName the new last name
+	 * @param lastName
+	 *            the new last name
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
@@ -88,7 +90,8 @@ public class Student
 	/**
 	 * Sets the email address.
 	 *
-	 * @param emailAddress the new email address
+	 * @param emailAddress
+	 *            the new email address
 	 */
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
@@ -106,7 +109,8 @@ public class Student
 	/**
 	 * Sets the phone number.
 	 *
-	 * @param phoneNumber the new phone number
+	 * @param phoneNumber
+	 *            the new phone number
 	 */
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
@@ -124,7 +128,8 @@ public class Student
 	/**
 	 * Sets the user name.
 	 *
-	 * @param userName the new user name
+	 * @param userName
+	 *            the new user name
 	 */
 	public void setUserName(String userName) {
 		this.userName = userName;
@@ -142,7 +147,8 @@ public class Student
 	/**
 	 * Sets the password.
 	 *
-	 * @param password the new password
+	 * @param password
+	 *            the new password
 	 */
 	public void setPassword(String password) {
 		this.password = password;
@@ -160,30 +166,32 @@ public class Student
 	/**
 	 * Sets the inst.
 	 *
-	 * @param inst the new inst
+	 * @param inst
+	 *            the new inst
 	 */
 	public void setInst(String inst) {
 		this.institute = inst;
 	}
-	
+
 	/**
 	 * Gets the reserved books.
 	 *
 	 * @return the reserved books
 	 */
-	public HashMap<Book,Integer> getReservedBooks() {
+	public HashMap<Book, Integer> getReservedBooks() {
 		return listReservedBooks;
 	}
 
 	/**
 	 * Sets the reserved books.
 	 *
-	 * @param listReservedBooks the list reserved books
+	 * @param listReservedBooks
+	 *            the list reserved books
 	 */
-	public void setReservedBooks(HashMap<Book,Integer> listReservedBooks) {
+	public void setReservedBooks(HashMap<Book, Integer> listReservedBooks) {
 		this.listReservedBooks = listReservedBooks;
 	}
-	
+
 	/**
 	 * Gets the fines accumulated.
 	 *
@@ -196,24 +204,27 @@ public class Student
 	/**
 	 * Sets the fines accumulated.
 	 *
-	 * @param iFinesAccumulated the new fines accumulated
+	 * @param iFinesAccumulated
+	 *            the new fines accumulated
 	 */
-	public void setFinesAccumulated(int  iFinesAccumulated) {
+	public void setFinesAccumulated(int iFinesAccumulated) {
 		this.iFinesAccumulated = iFinesAccumulated;
 	}
-	
+
 	/**
 	 * Instantiates a new student.
 	 *
-	 * @param userName the user name
-	 * @param password the password
-	 * @param inst the inst
+	 * @param userName
+	 *            the user name
+	 * @param password
+	 *            the password
+	 * @param inst
+	 *            the inst
 	 */
-	public Student(String userName, String password, String inst)
-	{
+	public Student(String userName, String password, String inst) {
 		this.userName = userName;
 		this.password = password;
-		this.institute	  = inst;
-		listReservedBooks = new HashMap<Book,Integer>();
+		this.institute = inst;
+		listReservedBooks = new HashMap<Book, Integer>();
 	}
 }

@@ -8,14 +8,13 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface LibraryInterface.
  */
 @WebService
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public interface LibraryInterface {
-	
+
 	/**
 	 * Creates the account.
 	 *
@@ -109,4 +108,18 @@ public interface LibraryInterface {
 	 */
 	@WebMethod
 	public String GetNonReturnersByServer(@WebParam int NumDays);
+
+	/**
+	 * Return book.
+	 *
+	 * @param m_username the m_username
+	 * @param m_password the m_password
+	 * @param m_bookName the m_book name
+	 * @param m_authorName the m_author name
+	 * @return true, if successful
+	 */
+	@WebMethod
+	public boolean returnBook(@WebParam String strUsername,
+			@WebParam String strPassword, @WebParam String strBookName,
+			@WebParam String strAuthor);
 }

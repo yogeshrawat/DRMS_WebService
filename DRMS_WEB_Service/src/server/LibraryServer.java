@@ -23,7 +23,6 @@ import javax.jws.soap.SOAPBinding.Style;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LibraryServer.
  */
@@ -43,7 +42,7 @@ public class LibraryServer extends Thread implements LibraryInterface {
 	static final String portConcordia = "50001", portOttawa = "50002",
 			portWaterloo = "50003";
 	private static String[] ServerNames = new String[] { Concordia, Ottawa,
-			Waterloo };
+		Waterloo };
 
 	private static int Default_Reserve_Period = 14;
 
@@ -91,7 +90,7 @@ public class LibraryServer extends Thread implements LibraryInterface {
 			logger.addHandler(fileTxt);
 		} catch (Exception err) {
 			System.out
-					.println("Couldn't Initiate Logger. Please check file permission");
+			.println("Couldn't Initiate Logger. Please check file permission");
 		}
 	}
 
@@ -251,13 +250,13 @@ public class LibraryServer extends Thread implements LibraryInterface {
 						// reserve the book
 						if (objBook.getNumOfCopy() > 0) {
 							objBook.setNumOfCopy(objBook.getNumOfCopy() - 1);// Decrement
-																				// available
-																				// copies
+							// available
+							// copies
 							(objStudent.getReservedBooks()).put(objBook,
 									Default_Reserve_Period);// Add Book to
-															// Student's
-															// reserved list for
-															// 14 days
+							// Student's
+							// reserved list for
+							// 14 days
 							success = true;
 							logger.info(strUsername + ": Reserved the book "
 									+ strBookName + "\n. Remaining copies of"
@@ -271,7 +270,7 @@ public class LibraryServer extends Thread implements LibraryInterface {
 
 						} else {
 							System.out
-									.println("Required book not available currently");
+							.println("Required book not available currently");
 						}
 					} else {
 						System.out.println("Required book not found");
@@ -354,17 +353,23 @@ public class LibraryServer extends Thread implements LibraryInterface {
 							objStudent = getStudent(m_username);
 							Book objBook = new Book(m_bookName, m_authorName, 0);
 							try {
+								//Below commented Code to test atomicity (for Demo)
+//								Exception ex = new Exception();
+//								if(objBook!=null)
+//								{
+//									throw ex;
+//								}
 								(objStudent.getReservedBooks()).put(objBook,
 										Default_Reserve_Period);// Add Book to
-																// Student's
-																// reserved list
-																// for 14 days
+								// Student's
+								// reserved list
+								// for 14 days
 								System.out
-										.println(this.instituteName
-												+ " Library : " + m_username
-												+ ": reserved book "
-												+ m_bookName + " from "
-												+ libraryServer + " server.");
+								.println(this.instituteName
+										+ " Library : " + m_username
+										+ ": reserved book "
+										+ m_bookName + " from "
+										+ libraryServer + " server.");
 								bookReserved = true;
 							} catch (Exception e) {
 								// Revert back the process as book reservation
@@ -403,14 +408,18 @@ public class LibraryServer extends Thread implements LibraryInterface {
 					// reserve the book
 					if (objBook.getNumOfCopy() > 0) {
 						objBook.setNumOfCopy(objBook.getNumOfCopy() - 1);// Decrement
-																			// available
-																			// copies
+						// available
+						// copies
+						System.out.println(this.instituteName +" Library :" +"Book reserved successfully : Book Name: "+objBook.getName());
+						System.out.println("Available copies of "+objBook.getName() +" is/are "+objBook.getNumOfCopy());
 						isAvailable = true;
 					}
 				} else {
 					objBook.setNumOfCopy(objBook.getNumOfCopy() + 1);// Increment
-																		// available
-																		// copies
+					// available
+					// copies
+					System.out.println(this.instituteName +" Library :" +"Reservation of book reverted: Book Name: "+objBook.getName());
+					System.out.println("Available copies of "+objBook.getName() +" is/are "+objBook.getNumOfCopy());
 					isAvailable = true;
 				}
 			} else {
@@ -536,7 +545,7 @@ public class LibraryServer extends Thread implements LibraryInterface {
 						while (innerIterator.hasNext()) {
 							@SuppressWarnings("rawtypes")
 							Map.Entry innerPair = (Map.Entry) innerIterator
-									.next();
+							.next();
 
 							if ((int) innerPair.getValue() <= (14 - NumDays)) {
 								sbStudentList.append(objStudent.getFirstName()
@@ -625,5 +634,54 @@ public class LibraryServer extends Thread implements LibraryInterface {
 		default:
 			return null;
 		}
+	}
+
+	public boolean returnBook(String strUsername, String strPassword,
+			String strBookName, String strAuthor) {
+		boolean success = false;
+		Student objStudent = null;
+		objStudent = getStudent(strUsername);
+		HashMap<String, Book> tableBooks = this.getBooksTable();
+		HashMap<Book, Integer> reservedBooks = objStudent.getReservedBooks();
+		Book book = tableBooks.get(strBookName);
+		if (!reservedBooks.containsKey(book)) {
+			logger.info(strBookName + ": is not reseved for the user "
+					+ strUsername);
+			System.out.println(strBookName + ": is not reserved for the user "
+					+ strUsername);
+			return success;
+		} else {
+			Book objBook = tableBooks.get(strBookName);
+			if (objStudent != null) {
+				synchronized (objBook) {
+					if (objBook != null) {
+						// reserve the book
+						objBook.setNumOfCopy(objBook.getNumOfCopy() + 1);// Increment
+						// book
+						// count
+						// in
+						// Library
+						// available
+						// copies
+						(objStudent.getReservedBooks()).remove(objBook);
+
+						success = true;
+						logger.info(strUsername + ": returned the book "
+								+ strBookName + "\n. Remaining copies of"
+								+ strBookName + "is/are"
+								+ objBook.getNumOfCopy());
+						System.out.println(this.instituteName + " Library : "
+								+ strUsername + ": returned the book "
+								+ strBookName + "\n. Remaining copies of "
+								+ strBookName + " is/are "
+								+ objBook.getNumOfCopy());
+
+					}
+
+				}
+			}
+		}
+		return success;
+
 	}
 }

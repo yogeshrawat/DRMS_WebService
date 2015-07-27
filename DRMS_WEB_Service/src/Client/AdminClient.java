@@ -21,27 +21,33 @@ import Interface.LibraryInterface;
 public class AdminClient extends Client {
 
 	/** The Constant Waterloo. */
-	static final String Concordia = "Concordia", Ottawa = "Ottawa",Waterloo = "Waterloo";
-	
+	static final String Concordia = "Concordia", Ottawa = "Ottawa",
+			Waterloo = "Waterloo";
+
 	/** The Constant portWaterloo. */
-	static final  String portConcordia = "50001",portOttawa = "50002",portWaterloo = "50003";
-	
+	static final String portConcordia = "50001", portOttawa = "50002",
+			portWaterloo = "50003";
+
 	/** The institute name. */
 	protected static String instituteName;
 
 	/**
 	 * Gets the service.
 	 *
-	 * @param portNumber the port number
-	 * @param strInstituteName the str institute name
+	 * @param portNumber
+	 *            the port number
+	 * @param strInstituteName
+	 *            the str institute name
 	 * @return the service
-	 * @throws MalformedURLException the malformed url exception
+	 * @throws MalformedURLException
+	 *             the malformed url exception
 	 */
-	public LibraryInterface getService(String portNumber,String strInstituteName) throws MalformedURLException
-	{
-		
-		URL url = new URL("http://localhost:" +portNumber+"/"+strInstituteName+"/ws?wsdl");
-		QName qname = new QName("http://server/","LibraryServerService");
+	public LibraryInterface getService(String portNumber,
+			String strInstituteName) throws MalformedURLException {
+
+		URL url = new URL("http://localhost:" + portNumber + "/"
+				+ strInstituteName + "/ws?wsdl");
+		QName qname = new QName("http://server/", "LibraryServerService");
 		Service service = Service.create(url, qname);
 		LibraryInterface library = service.getPort(LibraryInterface.class);
 		return library;
@@ -61,48 +67,51 @@ public class AdminClient extends Client {
 	/**
 	 * The main method.
 	 *
-	 * @param args the arguments
+	 * @param args
+	 *            the arguments
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		Scanner keyboard = new Scanner(System.in);
-		String institution = null,portNumber = null, userName = null, password = null;
-		try{
+		String institution = null, portNumber = null, userName = null, password = null;
+		try {
 			AdminClient objClient = new AdminClient();
 			LibraryInterface objServer = null;
-			
-			//to which server you want to connect
-			institution= getEducationalInstituteFromUser();
+
+			// to which server you want to connect
+			institution = getEducationalInstituteFromUser();
 			portNumber = getPortNumber(institution);
-			objServer = objClient.getService(portNumber,institution);
+			objServer = objClient.getService(portNumber, institution);
 			Integer userInput = 0;
 			showMenu();
 			objClient.setLogger("admin", "logs/admin/admin.txt");
 			objClient.logger.info("admin login");
 
-			userInput = Integer.parseInt(objClient.InputStringValidation(keyboard));
+			userInput = Integer.parseInt(objClient
+					.InputStringValidation(keyboard));
 
-			while(true)
-			{
-				switch(userInput)
-				{
-				case 1: 
+			while (true) {
+				switch (userInput) {
+				case 1:
 					System.out.println("Admin userName: ");
 					userName = objClient.InputStringValidation(keyboard);
 					System.out.println("Password: ");
 					password = objClient.InputStringValidation(keyboard);
 					System.out.println("No Of Days: ");
 					int numOfDays = objClient.InputIntValidation(keyboard);
-					
-					objClient.logger.info("Non Returner retrieved on :"+ System.currentTimeMillis());
+
+					objClient.logger.info("Non Returner retrieved on :"
+							+ System.currentTimeMillis());
 					String result = "";
-					result = objServer.getNonReturners(userName, password, objServer.toString(), numOfDays);
-					File directory=new File("logs\\admin");
-					if(!directory.exists()){
+					result = objServer.getNonReturners(userName, password,
+							objServer.toString(), numOfDays);
+					File directory = new File("logs\\admin");
+					if (!directory.exists()) {
 						directory.mkdir();
 					}
-					File nonReturners=new File(".\\logs\\admin\\NonReturnersFile.txt");
-					BufferedWriter bw=new BufferedWriter(new FileWriter(nonReturners));
+					File nonReturners = new File(
+							".\\logs\\admin\\NonReturnersFile.txt");
+					BufferedWriter bw = new BufferedWriter(new FileWriter(
+							nonReturners));
 					bw.write(result.trim());
 					bw.flush();
 					bw.close();
@@ -118,24 +127,23 @@ public class AdminClient extends Client {
 					System.out.println("Invalid Input, please try again.");
 				}
 			}
-		
-	}catch(Exception e){
-		e.printStackTrace();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-}
-	
+
 	/**
 	 * Gets the educational institute from user.
 	 *
 	 * @return the educational institute from user
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private static String getEducationalInstituteFromUser() throws IOException
-	{
+	private static String getEducationalInstituteFromUser() throws IOException {
 		Integer ans = 0;
 		System.out.println("Institution Name: ");
-		while(true)
-		{
+		while (true) {
 			System.out.println("Please select a valid option:");
 			System.out.println("1 for Concordia");
 			System.out.println("2 for Ottawa");
@@ -143,38 +151,41 @@ public class AdminClient extends Client {
 			Client objClient = new StudentClient();
 			Scanner keyboard = new Scanner(System.in);
 			ans = Integer.parseInt(objClient.InputStringValidation(keyboard));
-			if(ans == 1||ans==2||ans==3)
-			{
+			if (ans == 1 || ans == 2 || ans == 3) {
 				break;
-			}
-			else
-			{
+			} else {
 				System.out.println("Invalid input!");
 			}
 		}
-		switch(ans)
-		{
-		case 1: return Concordia;
-		case 2: return Ottawa;
-		case 3: return Waterloo;					
+		switch (ans) {
+		case 1:
+			return Concordia;
+		case 2:
+			return Ottawa;
+		case 3:
+			return Waterloo;
 		}
 		return null;
 	}
 
-/**
- * Gets the port number.
- *
- * @param institution the institution
- * @return the port number
- */
-private static String getPortNumber(String institution) {
-		
-		switch(institution)
-		{
-		case Concordia: return portConcordia;
-		case Ottawa: return portOttawa;
-		case Waterloo: return portWaterloo;
-		default : return null;
+	/**
+	 * Gets the port number.
+	 *
+	 * @param institution
+	 *            the institution
+	 * @return the port number
+	 */
+	private static String getPortNumber(String institution) {
+
+		switch (institution) {
+		case Concordia:
+			return portConcordia;
+		case Ottawa:
+			return portOttawa;
+		case Waterloo:
+			return portWaterloo;
+		default:
+			return null;
 		}
 	}
 }
