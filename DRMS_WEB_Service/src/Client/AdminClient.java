@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Client;
 
 import java.io.BufferedWriter;
@@ -11,12 +14,29 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import Interface.LibraryInterface;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AdminClient.
+ */
 public class AdminClient extends Client {
 
+	/** The Constant Waterloo. */
 	static final String Concordia = "Concordia", Ottawa = "Ottawa",Waterloo = "Waterloo";
+	
+	/** The Constant portWaterloo. */
 	static final  String portConcordia = "50001",portOttawa = "50002",portWaterloo = "50003";
+	
+	/** The institute name. */
 	protected static String instituteName;
 
+	/**
+	 * Gets the service.
+	 *
+	 * @param portNumber the port number
+	 * @param strInstituteName the str institute name
+	 * @return the service
+	 * @throws MalformedURLException the malformed url exception
+	 */
 	public LibraryInterface getService(String portNumber,String strInstituteName) throws MalformedURLException
 	{
 		
@@ -28,6 +48,9 @@ public class AdminClient extends Client {
 	}
 
 	// Get Server Connection
+	/**
+	 * Show menu.
+	 */
 	public static void showMenu() {
 		System.out.println("DRMS Admin Client System \n");
 		System.out.println("Please select an option");
@@ -35,6 +58,11 @@ public class AdminClient extends Client {
 		System.out.println("2. Exit");
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args)
 	{
 		Scanner keyboard = new Scanner(System.in);
@@ -95,6 +123,13 @@ public class AdminClient extends Client {
 		e.printStackTrace();
 	}
 }
+	
+	/**
+	 * Gets the educational institute from user.
+	 *
+	 * @return the educational institute from user
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static String getEducationalInstituteFromUser() throws IOException
 	{
 		Integer ans = 0;
@@ -125,6 +160,13 @@ public class AdminClient extends Client {
 		}
 		return null;
 	}
+
+/**
+ * Gets the port number.
+ *
+ * @param institution the institution
+ * @return the port number
+ */
 private static String getPortNumber(String institution) {
 		
 		switch(institution)

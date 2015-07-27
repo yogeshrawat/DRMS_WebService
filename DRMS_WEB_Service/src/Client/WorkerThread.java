@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Client;
 
 import java.net.MalformedURLException;
@@ -8,13 +11,30 @@ import javax.xml.ws.Service;
 
 import Interface.LibraryInterface;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WorkerThread.
+ */
 class WorkerThread implements Runnable {
+	
+	/** The i. */
 	static int i=0;
+    
+    /** The message. */
     private String message;
+    
+    /**
+     * Instantiates a new worker thread.
+     *
+     * @param s the s
+     */
     public WorkerThread(String s){
         this.message=s;
     }
  
+    /* (non-Javadoc)
+     * @see java.lang.Runnable#run()
+     */
     public void run() {
         System.out.println(Thread.currentThread().getName()+" (Start) message = "+message);
         URL url = null;
@@ -37,6 +57,9 @@ class WorkerThread implements Runnable {
         System.out.println(Thread.currentThread().getName()+" (End)");
     }
  
+    /**
+     * Processmessage.
+     */
     private void processmessage() {
         try {  Thread.sleep(2000);  } catch (InterruptedException e) { e.printStackTrace(); }
     }

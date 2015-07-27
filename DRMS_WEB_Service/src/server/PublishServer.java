@@ -1,13 +1,22 @@
+/*
+ * 
+ */
 package server;
 
 import java.io.IOException;
 import javax.xml.ws.Endpoint;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PublishServer.
+ */
 public class PublishServer extends Thread{
 
 	/**
-	 * @param args
-	 * @throws IOException 
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	
 	public static void main(String[] args) throws IOException {

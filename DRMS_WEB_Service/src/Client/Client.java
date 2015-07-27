@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Client;
 
 import java.util.Scanner;
@@ -6,10 +9,21 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Client.
+ */
 public class Client {
 	
+	/** The logger. */
 	protected Logger logger;
 
+	/**
+	 * Sets the logger.
+	 *
+	 * @param username the username
+	 * @param fileName the file name
+	 */
 	public void setLogger(String username, String fileName) {
 		try{
 			this.logger = Logger.getLogger(username);
@@ -25,6 +39,12 @@ public class Client {
 		}
 	}
 	
+	/**
+	 * Input string validation.
+	 *
+	 * @param keyboard the keyboard
+	 * @return the string
+	 */
 	public String InputStringValidation(Scanner keyboard) {
 		Boolean valid = false;
 		String userInput = "";
@@ -44,6 +64,12 @@ public class Client {
 		return userInput;
 	}
 	
+	/**
+	 * Input int validation.
+	 *
+	 * @param keyboard the keyboard
+	 * @return the int
+	 */
 	public int InputIntValidation(Scanner keyboard) {
 		Boolean valid = false;
 		int userInput = 0;

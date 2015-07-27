@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Client;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -8,15 +11,38 @@ import javax.xml.ws.Service;
 import Utility.ValidateInput;
 import Interface.LibraryInterface;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StudentClient.
+ */
 public class StudentClient extends Client{
 
+	/** The Concordia server. */
 	static LibraryInterface ConcordiaServer;
+	
+	/** The Ottawa server. */
 	static LibraryInterface OttawaServer;
+	
+	/** The Waterloo server. */
 	static LibraryInterface WaterlooServer;
+	
+	/** The Constant Waterloo. */
 	static final String Concordia ="Concordia", Ottawa="Ottawa", Waterloo="Waterloo";
+	
+	/** The Constant portWaterloo. */
 	static final  String portConcordia = "50001",portOttawa = "50002",portWaterloo = "50003";
+	
+	/** The institute name. */
 	protected static String instituteName;
 
+	/**
+	 * Server validation.
+	 *
+	 * @param portNumber the port number
+	 * @param strInstituteName the str institute name
+	 * @return the library interface
+	 * @throws MalformedURLException the malformed url exception
+	 */
 	public LibraryInterface ServerValidation(String portNumber,String strInstituteName) throws MalformedURLException
 	{
 		URL url = new URL("http://localhost:" +portNumber+"/"+strInstituteName+"/ws?wsdl");
@@ -27,6 +53,9 @@ public class StudentClient extends Client{
 		}
 	
 	//Menu to display actions that are need to perform by student
+	/**
+	 * Show menu.
+	 */
 	public static void showMenu()
 	{
 		System.out.println("DRMS Student Client System \n");
@@ -37,6 +66,11 @@ public class StudentClient extends Client{
 		System.out.println("4. Exit");
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args)
 	{
 		try{
@@ -186,6 +220,12 @@ public class StudentClient extends Client{
 		}
 	}
 
+	/**
+	 * Gets the port number.
+	 *
+	 * @param institution the institution
+	 * @return the port number
+	 */
 	private static String getPortNumber(String institution) {
 		
 		switch(institution)
@@ -197,6 +237,12 @@ public class StudentClient extends Client{
 		}
 	}
 
+	/**
+	 * Gets the educational institute from user.
+	 *
+	 * @return the educational institute from user
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static String getEducationalInstituteFromUser() throws IOException
 	{
 		Integer ans = 0;
