@@ -137,11 +137,13 @@ public class StudentClient extends Client{
 					}
 					success = objServer.reserveBook(userName, password, bookName, authorName);
 					if(success){
-						System.out.println("Success");
+						System.out.println("Book Reserved successfully ");
 						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
 						objClient.logger.info("Book reserved successfully for user "+userName);
 					}
 					else{
+						System.out.println("Book Not available for reservation ");
+
 						objClient.setLogger(userName, ".\\logs\\students\\"+userName+".txt");
 						objClient.logger.info("Book could not be reserved for : "+userName);
 

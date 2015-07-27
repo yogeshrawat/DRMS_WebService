@@ -186,20 +186,22 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		int iLoginResult = 0;
 		Student objStudent = null;
 		objStudent = getStudent(strUsername);
+		HashMap<String, Book> tableBooks = this.getBooksTable();
 		HashMap<Book,Integer> reservedBooks = objStudent.getReservedBooks();
-		if(reservedBooks.get(strBookName) != null)	{
+		Book book = tableBooks.get(strBookName);
+		if(reservedBooks.containsKey(book))	{
 			logger.info(strBookName+": is already reserved for the user "+strUsername);
 			System.out.println(strBookName+": is already reserved for the user "+strUsername);
 			return success;
 		}
+		Book objBook = tableBooks.get(strBookName);
 		if(objStudent!=null)
 		{
 			iLoginResult = checkUser(strUsername, strPassword, objStudent.getInst());
 			if(iLoginResult==1)
 			{
-				synchronized(tableBooks)
+				synchronized(objBook)
 				{
-					Book objBook = tableBooks.get(strBookName);
 					if(objBook!= null)
 					{
 						//reserve the book
@@ -261,6 +263,16 @@ public class LibraryServer extends Thread implements LibraryInterface{
 			String m_bookName, String m_authorName) 
 	{
 		boolean bookReserved = false;
+		Student objStudent = null;
+		objStudent = getStudent(m_username);
+		HashMap<String, Book> tableBooks = this.getBooksTable();
+		HashMap<Book,Integer> reservedBooks = objStudent.getReservedBooks();
+		Book book = tableBooks.get(m_bookName);
+		if(reservedBooks.containsKey(book))	{
+			logger.info(m_bookName+": is already reserved for the user "+m_bookName);
+			System.out.println(m_bookName+": is already reserved for the user "+m_bookName);
+			return bookReserved;
+		}
 		if(isBookAvailable(m_bookName))
 		{
 			
@@ -281,7 +293,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 						if(remoteServer.grantBookInterServer(m_bookName,false))
 						{
 							//Add granted book to Students Reserved book list
-							Student objStudent = null;
+							//Student objStudent = null;
 							objStudent = getStudent(m_username);
 							Book objBook = new Book(m_bookName,m_authorName,0);
 							try
@@ -355,12 +367,15 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		{
 			if(listStudent.size()>0)
 			{
+				synchronized(listStudent)
+				{
 				for(Student student : listStudent)
 				{
 					if(student.getUserName().equals(strUsername))
 					{
 						exist = true;
 					}
+				}
 				}
 			}
 		}
@@ -377,6 +392,8 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		{
 			if(listStudent.size()>0)
 			{
+				synchronized(listStudent)
+				{
 				for(Student student : listStudent)
 				{
 					if(student.getUserName().equals(strUsername))
@@ -390,6 +407,7 @@ public class LibraryServer extends Thread implements LibraryInterface{
 							login = 2;
 						}
 					}
+				}
 				}
 			}
 		}
