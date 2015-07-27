@@ -301,9 +301,6 @@ public class LibraryServer extends Thread implements LibraryInterface{
 								(objStudent.getReservedBooks()).put(objBook,Default_Reserve_Period);//Add Book to Student's reserved list for 14 days
 								System.out.println(this.instituteName +" Library : "+m_username+": reserved book "+m_bookName+" from " + libraryServer+" server.");
 								bookReserved =true;
-								//Logger.info(m_username+": Reserved the book "+m_bookName+"\n. Remaining copies of"+ m_bookName +"is/are "+objBook.getNumOfCopy());
-								//Logger.info(m_username+": Reserved the book "+m_bookName+"from "+libraryServer.instituteName+" server.");
-								//System.out.println(this.instituteName +" Library : "+m_username+": Reserved the book "+m_bookName+"\n. Remaining copies of "+ m_bookName+" is/are "+objBook.getNumOfCopy());
 							}
 							catch(Exception e)
 							{
@@ -523,8 +520,8 @@ public class LibraryServer extends Thread implements LibraryInterface{
 		URL url = new URL("http://localhost:" +portNumber+"/"+strInstituteName+"/ws?wsdl");
 		QName qname = new QName("http://server/","LibraryServerService");
 		Service service = Service.create(url, qname);
-		LibraryInterface store = service.getPort(LibraryInterface.class);
-		return store;
+		LibraryInterface library = service.getPort(LibraryInterface.class);
+		return library;
 	}
 
 	private static String getPortNumber(String institution) {

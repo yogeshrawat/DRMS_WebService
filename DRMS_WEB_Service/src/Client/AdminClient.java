@@ -23,8 +23,8 @@ public class AdminClient extends Client {
 		URL url = new URL("http://localhost:" +portNumber+"/"+strInstituteName+"/ws?wsdl");
 		QName qname = new QName("http://server/","LibraryServerService");
 		Service service = Service.create(url, qname);
-		LibraryInterface store = service.getPort(LibraryInterface.class);
-		return store;
+		LibraryInterface library = service.getPort(LibraryInterface.class);
+		return library;
 	}
 
 	// Get Server Connection
